@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 )
 
 func sayHello(w http.ResponseWriter, r *http.Request) {
@@ -10,8 +11,13 @@ func sayHello(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", sayHello)
 
-	log.Fatalln(http.ListenAndServe(":80", mux))
+	log.Fatalln(http.ListenAndServe(":"+port, mux))
 }
