@@ -1,9 +1,13 @@
 package lyrics
 
-import "github.com/gorilla/mux"
-import "net/http"
-import "encoding/json"
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+
+	"github.com/gorilla/mux"
+	"github.com/shayanh/limoo-server/lyrics/parser"
+)
 
 type Request struct {
 	Artist string
@@ -11,16 +15,23 @@ type Request struct {
 }
 
 type Response struct {
-	Lyric string `json:"lyrics"`
+	Lyrics string `json:"lyrics"`
 }
 
 func getLyrics(artist string, title string) (Response, error) {
 	// TODO normalize strings
 
-	resp := Response{
-		Lyric: "Hello!",
+	resp := Response{}
+
+	parsers := parser.GetParsers()
+	for _, p := range parsers {
+		lyrics, err := parser.GetLyrics(p, artist, title)
+		if err == nil {
+			resp.Lyrics = lyrics
+			return resp, nil
+		}
 	}
-	return resp, nil
+	return resp, fmt.Errorf("lyrics not found")
 }
 
 func HandleFuncs(router *mux.Router) {
