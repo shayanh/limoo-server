@@ -2,7 +2,6 @@ package lyrics
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -18,10 +17,15 @@ type response struct {
 	Lyrics string `json:"lyrics"`
 }
 
-func getLyrics(artist string, title string) (response, error) {
-	// TODO normalize stringss
-
+func getLyrics(qartist string, qtitle string) (response, error) {
 	resp := response{}
+
+	p := new(parser.Parser)
+	p.Init(qartist, qtitle)
+	artist, title, err := p.GetTrackInfo()
+	if err != nil {
+		return resp, err
+	}
 
 	t, found := searchTrack(artist, title)
 	if found {
@@ -29,23 +33,19 @@ func getLyrics(artist string, title string) (response, error) {
 		return resp, nil
 	}
 
-	parsers := parser.GetParsers()
-	for _, p := range parsers {
-		lyrics, err := parser.GetLyrics(p, artist, title)
-		if err == nil {
-			resp.Lyrics = lyrics
-
-			t := track{
-				Artist: artist,
-				Title:  title,
-				Lyrics: lyrics,
-			}
-			go insertTrack(&t)
-
-			return resp, nil
-		}
+	lyrics, err := p.GetLyrics()
+	if err != nil {
+		return resp, err
 	}
-	return resp, fmt.Errorf("lyrics not found")
+	newTrack := &track{
+		Artist: artist,
+		Title:  title,
+		Lyrics: lyrics,
+	}
+	go insertTrack(newTrack)
+
+	resp.Lyrics = lyrics
+	return resp, nil
 }
 
 func HandleFuncs(router *mux.Router) {
@@ -54,8 +54,6 @@ func HandleFuncs(router *mux.Router) {
 			Artist: r.URL.Query().Get("artist"),
 			Title:  r.URL.Query().Get("title"),
 		}
-
-		fmt.Println("artist =", req.Artist, "title =", req.Title)
 
 		resp, err := getLyrics(req.Artist, req.Title)
 		if err != nil {
