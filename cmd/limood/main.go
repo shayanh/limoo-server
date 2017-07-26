@@ -17,6 +17,12 @@ func main() {
 
 	lyrics.HandleFuncs(router.PathPrefix("/lyrics").Subrouter())
 
+	if err := lyrics.InitDB(app.MongoAddr); err != nil {
+		log.Fatal(err)
+	}
+	defer lyrics.CloseDB()
+	log.Printf("Connected to MongoDB")
+
 	log.Printf("listening on http://%s/", app.ListenAddr)
 	err := http.ListenAndServe(app.ListenAddr, application.Logger(router))
 	if err != nil {

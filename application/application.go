@@ -9,6 +9,7 @@ import (
 
 type Application struct {
 	ListenAddr string
+	MongoAddr  string
 }
 
 func NewApplication() *Application {
@@ -20,6 +21,7 @@ func NewApplication() *Application {
 
 	app := &Application{}
 	app.ListenAddr = viper.GetString("addr")
+	app.MongoAddr = viper.GetString("mongo_addr")
 	return app
 }
 
