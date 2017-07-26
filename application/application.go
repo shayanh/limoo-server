@@ -1,8 +1,9 @@
 package application
 
 import (
-	"log"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/spf13/viper"
 )
@@ -27,7 +28,7 @@ func NewApplication() *Application {
 
 func Logger(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Println(r.Method, r.URL)
+		log.Info(r.Method, r.URL)
 		h.ServeHTTP(w, r)
 	})
 }

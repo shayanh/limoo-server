@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/gorilla/mux"
 	"github.com/shayanh/limoo-server/lyrics/parser"
 )
@@ -57,6 +59,10 @@ func HandleFuncs(router *mux.Router) {
 
 		resp, err := getLyrics(req.Artist, req.Title)
 		if err != nil {
+			log.WithFields(log.Fields{
+				"artist": req.Artist,
+				"title":  req.Title,
+			}).Error(err)
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
