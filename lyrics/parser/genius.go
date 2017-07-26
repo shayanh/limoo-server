@@ -53,7 +53,7 @@ type geniusArtist struct {
 	Name string `json:"name"`
 }
 
-var httpClient = &http.Client{Timeout: 10 * time.Second}
+var httpClient = &http.Client{Timeout: 5 * time.Second}
 
 func (g *genius) getTrackInfo() (string, string, error) {
 	apiURL := "https://api.genius.com/"
