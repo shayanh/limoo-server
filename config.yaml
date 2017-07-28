@@ -1,3 +1,4 @@
 addr: 127.0.0.1:8000
-mongo_addr: 127.0.0.1
+# mongo_addr: 127.0.0.1
+mongo_addr: mongo
 genius_access_token: your access token 
