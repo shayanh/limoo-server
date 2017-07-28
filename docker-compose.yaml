@@ -1,0 +1,16 @@
+version: '3.1'
+
+services:
+  limoo-server:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+  
+  mongo:
+    image: mongo
+    ports:
+      - "27017"
+    volumes:
+      - /data/db:/data/db
