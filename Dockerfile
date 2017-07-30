@@ -1,4 +1,6 @@
-FROM quay.io/brianredbeard/corebox
+FROM ubuntu:xenial
+
+RUN apt-get update && apt-get install -y ca-certificates
 
 EXPOSE 8000
 

@@ -7,6 +7,8 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/sirupsen/logrus"
+
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -65,6 +67,7 @@ func (g *genius) getTrackInfo() (string, string, error) {
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", g.accessToken))
 	resp, err := httpClient.Do(req)
 	if err != nil {
+		logrus.Error(err)
 		return "", "", err
 	}
 	defer resp.Body.Close()
