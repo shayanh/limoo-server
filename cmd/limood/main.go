@@ -13,6 +13,8 @@ import (
 func main() {
 	app := application.NewApplication()
 
+	log.SetLevel(log.DebugLevel)
+
 	router := mux.NewRouter()
 	router.StrictSlash(true)
 
