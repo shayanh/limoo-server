@@ -63,6 +63,10 @@ func (g *genius) getTrackInfo() (string, string, error) {
 	query := url.QueryEscape(g.qartist + " " + g.qtitle)
 	reqURL := fmt.Sprintf("%s%s?q=%s", apiURL, method, query)
 
+	logrus.WithFields(logrus.Fields{
+		"reqURL": reqURL,
+	}).Debug()
+
 	req, _ := http.NewRequest("GET", reqURL, nil)
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", g.accessToken))
 	resp, err := httpClient.Do(req)

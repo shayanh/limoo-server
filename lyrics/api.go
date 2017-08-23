@@ -25,11 +25,24 @@ func getLyrics(qartist string, qtitle string) (response, error) {
 	p := new(parser.Parser)
 	p.Init(qartist, qtitle)
 	artist, title, err := p.GetTrackInfo()
+
+	log.WithFields(log.Fields{
+		"qartist": qartist,
+		"qtitle":  qtitle,
+		"artist":  artist,
+		"title":   title,
+	}).Debug()
+
 	if err != nil {
 		return resp, err
 	}
 
 	t, found := searchTrack(artist, title)
+
+	log.WithFields(log.Fields{
+		"found in db": found,
+	}).Debug()
+
 	if found {
 		resp.Lyrics = t.Lyrics
 		return resp, nil
