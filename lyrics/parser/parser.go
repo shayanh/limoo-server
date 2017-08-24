@@ -2,15 +2,39 @@ package parser
 
 import (
 	"fmt"
+	"strings"
 )
 
 type Parser struct {
 	backends []backend
 }
 
-func (p *Parser) Init(QArtist, QTitle string) {
+func (p *Parser) cleanName(s string) string {
+	badChars := []rune{'-', '(', '[', ')', ']'}
+	res := s
+	for i, c := range s {
+		flag := false
+		for _, bad := range badChars {
+			if c == bad {
+				res = s[:i]
+				flag = true
+				break
+			}
+		}
+		if flag {
+			break
+		}
+	}
+	res = strings.TrimSpace(res)
+	return res
+}
+
+func (p *Parser) Init(qartist, qtitle string) {
+	qartist = p.cleanName(qartist)
+	qtitle = p.cleanName(qtitle)
+
 	gns := new(genius)
-	gns.init(QArtist, QTitle)
+	gns.init(qartist, qtitle)
 
 	p.backends = append(p.backends, gns)
 }

@@ -19,17 +19,26 @@ type response struct {
 	Lyrics string `json:"lyrics"`
 }
 
-func getLyrics(qartist string, qtitle string) (response, error) {
+func getLyrics(qartist, qtitle string) (response, error) {
 	resp := response{}
+
+	log.Info("qartist = ", qartist, "qtitle = ", qtitle)
 
 	p := new(parser.Parser)
 	p.Init(qartist, qtitle)
 	artist, title, err := p.GetTrackInfo()
+	log.WithFields(log.Fields{
+		"artist": artist,
+		"title":  title,
+	}).Info()
 	if err != nil {
 		return resp, err
 	}
 
 	t, found := searchTrack(artist, title)
+	log.WithFields(log.Fields{
+		"found in db": found,
+	}).Info()
 	if found {
 		resp.Lyrics = t.Lyrics
 		return resp, nil
