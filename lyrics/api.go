@@ -61,9 +61,12 @@ func getLyrics(qartist, qtitle string) (response, error) {
 
 func HandleFuncs(router *mux.Router) {
 	router.HandleFunc("", func(w http.ResponseWriter, r *http.Request) {
+		r.ParseForm()
 		req := request{
-			Artist: r.URL.Query().Get("artist"),
-			Title:  r.URL.Query().Get("title"),
+			// Artist: r.URL.Query().Get("artist"),
+			// Title:  r.URL.Query().Get("title"),
+			Artist: r.PostForm.Get("artist"),
+			Title:  r.PostForm.Get("title"),
 		}
 
 		resp, err := getLyrics(req.Artist, req.Title)
