@@ -22,7 +22,10 @@ type response struct {
 func getLyrics(qartist, qtitle string) (response, error) {
 	resp := response{}
 
-	log.Info("qartist = ", qartist, "qtitle = ", qtitle)
+	log.WithFields(log.Fields{
+		"qartist": qartist,
+		"qtitle":  qtitle,
+	})
 
 	p := new(parser.Parser)
 	p.Init(qartist, qtitle)
