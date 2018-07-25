@@ -62,6 +62,7 @@ func getLyrics(qartist, qtitle string) (response, error) {
 	return resp, nil
 }
 
+// HandleFuncs for /lyrics path
 func HandleFuncs(router *mux.Router) {
 	router.HandleFunc("", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()

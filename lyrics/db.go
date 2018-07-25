@@ -8,6 +8,7 @@ import (
 
 var _session *mgo.Session
 
+// InitDB initiate Mongo DB
 func InitDB(addr string) error {
 	if _session != nil {
 		return fmt.Errorf("DB has initiated before")
@@ -21,6 +22,7 @@ func InitDB(addr string) error {
 	return nil
 }
 
+// CloseDB Mongo DB main session
 func CloseDB() {
 	_session.Close()
 }
