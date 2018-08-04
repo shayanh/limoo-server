@@ -5,11 +5,11 @@ import (
 	"strings"
 )
 
-type Parser struct {
+type Handler struct {
 	backends []backend
 }
 
-func (p *Parser) cleanName(s string) string {
+func (p *Handler) cleanName(s string) string {
 	badChars := []rune{'-', '(', '[', ')', ']'}
 	res := s
 	for i, c := range s {
@@ -29,7 +29,7 @@ func (p *Parser) cleanName(s string) string {
 	return res
 }
 
-func (p *Parser) Init(qartist, qtitle string) {
+func (p *Handler) Init(qartist, qtitle string) {
 	qartist = p.cleanName(qartist)
 	qtitle = p.cleanName(qtitle)
 
@@ -39,7 +39,7 @@ func (p *Parser) Init(qartist, qtitle string) {
 	p.backends = append(p.backends, gns)
 }
 
-func (p *Parser) GetTrackInfo() (string, string, error) {
+func (p *Handler) GetTrackInfo() (string, string, error) {
 	for _, b := range p.backends {
 		artist, title, err := b.getTrackInfo()
 		if err != nil {
@@ -50,7 +50,7 @@ func (p *Parser) GetTrackInfo() (string, string, error) {
 	return "", "", fmt.Errorf("cannot fetch track information")
 }
 
-func (p *Parser) GetLyrics() (string, error) {
+func (p *Handler) GetLyrics() (string, error) {
 	for _, b := range p.backends {
 		lyrics, err := b.getLyrics()
 		if err != nil {

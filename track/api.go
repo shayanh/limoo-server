@@ -27,9 +27,9 @@ func getTrack(qartist, qtitle string) (response, error) {
 		"qtitle":  qtitle,
 	})
 
-	p := new(lyrics.Parser)
-	p.Init(qartist, qtitle)
-	artist, title, err := p.GetTrackInfo()
+	lyricsHandler := new(lyrics.Handler)
+	lyricsHandler.Init(qartist, qtitle)
+	artist, title, err := lyricsHandler.GetTrackInfo()
 	log.WithFields(log.Fields{
 		"artist": artist,
 		"title":  title,
@@ -47,7 +47,7 @@ func getTrack(qartist, qtitle string) (response, error) {
 		return resp, nil
 	}
 
-	lyrics, err := p.GetLyrics()
+	lyrics, err := lyricsHandler.GetLyrics()
 	if err != nil {
 		return resp, err
 	}
