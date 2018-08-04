@@ -1,4 +1,4 @@
-package parser
+package lyrics
 
 import (
 	"encoding/json"
@@ -45,14 +45,16 @@ type hit struct {
 }
 
 type result struct {
-	FullTitle string       `json:"full_title"`
-	Title     string       `json:"title"`
-	URL       string       `json:"url"`
-	Artist    geniusArtist `json:"primary_artist"`
+	FullTitle  string       `json:"full_title"`
+	Title      string       `json:"title"`
+	TrackURL   string       `json:"url"`
+	SongArtURL string       `json:"song_art_image_thumbnail_url"`
+	Artist     geniusArtist `json:"primary_artist"`
 }
 
 type geniusArtist struct {
-	Name string `json:"name"`
+	Name     string `json:"name"`
+	ImageURL string `json:"image_url"`
 }
 
 var httpClient = &http.Client{Timeout: 5 * time.Second}
@@ -81,7 +83,7 @@ func (g *genius) getTrackInfo() (string, string, error) {
 	if status != 200 || len(hits) < 1 {
 		return "", "", fmt.Errorf("cannot fetch track information")
 	}
-	g.trackURL = hits[0].Result.URL
+	g.trackURL = hits[0].Result.TrackURL
 
 	artist := hits[0].Result.Artist.Name
 	title := hits[0].Result.Title

@@ -1,4 +1,4 @@
-package lyrics
+package track
 
 import "gopkg.in/mgo.v2/bson"
 

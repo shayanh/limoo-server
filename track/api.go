@@ -1,4 +1,4 @@
-package lyrics
+package track
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/gorilla/mux"
-	"github.com/shayanh/limoo-server/lyrics/parser"
+	"github.com/shayanh/limoo-server/track/lyrics"
 )
 
 type request struct {
@@ -19,7 +19,7 @@ type response struct {
 	Lyrics string `json:"lyrics"`
 }
 
-func getLyrics(qartist, qtitle string) (response, error) {
+func getTrack(qartist, qtitle string) (response, error) {
 	resp := response{}
 
 	log.WithFields(log.Fields{
@@ -27,7 +27,7 @@ func getLyrics(qartist, qtitle string) (response, error) {
 		"qtitle":  qtitle,
 	})
 
-	p := new(parser.Parser)
+	p := new(lyrics.Parser)
 	p.Init(qartist, qtitle)
 	artist, title, err := p.GetTrackInfo()
 	log.WithFields(log.Fields{
@@ -73,7 +73,7 @@ func HandleFuncs(router *mux.Router) {
 			Title:  r.PostForm.Get("title"),
 		}
 
-		resp, err := getLyrics(req.Artist, req.Title)
+		resp, err := getTrack(req.Artist, req.Title)
 		if err != nil {
 			log.WithFields(log.Fields{
 				"artist": req.Artist,

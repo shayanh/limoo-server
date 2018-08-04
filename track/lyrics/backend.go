@@ -1,4 +1,4 @@
-package parser
+package lyrics
 
 type backend interface {
 	init(qartist, qtitle string)

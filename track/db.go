@@ -1,4 +1,4 @@
-package lyrics
+package track
 
 import (
 	"fmt"
