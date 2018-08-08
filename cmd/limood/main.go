@@ -7,7 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/shayanh/limoo-server/application"
-	"github.com/shayanh/limoo-server/lyrics"
+	"github.com/shayanh/limoo-server/track"
 )
 
 func main() {
@@ -16,12 +16,12 @@ func main() {
 	router := mux.NewRouter()
 	router.StrictSlash(true)
 
-	lyrics.HandleFuncs(router.PathPrefix("/lyrics").Subrouter())
+	track.HandleFuncs(router.PathPrefix("/lyrics").Subrouter())
 
-	if err := lyrics.InitDB(app.MongoAddr); err != nil {
+	if err := track.InitDB(app.MongoAddr); err != nil {
 		log.Fatal(err)
 	}
-	defer lyrics.CloseDB()
+	defer track.CloseDB()
 	log.Printf("Connected to MongoDB")
 
 	log.Printf("listening on http://%s/", app.ListenAddr)
