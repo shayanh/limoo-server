@@ -12,8 +12,9 @@ type Handler struct {
 }
 
 type TrackInfo struct {
-	Artist string
-	Title  string
+	Artist     string
+	Title      string
+	SongArtURL string
 }
 
 func (p *Handler) cleanName(s string) string {

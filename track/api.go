@@ -43,9 +43,10 @@ func getTrack(qartist, qtitle string) (track, error) {
 		return track{}, err
 	}
 	newTrack := &track{
-		Artist: trackInfo.Artist,
-		Title:  trackInfo.Title,
-		Lyrics: lyrics,
+		Artist:     trackInfo.Artist,
+		Title:      trackInfo.Title,
+		SongArtURL: trackInfo.SongArtURL,
+		Lyrics:     lyrics,
 	}
 	go insertTrack(newTrack)
 

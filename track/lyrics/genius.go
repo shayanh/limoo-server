@@ -90,9 +90,12 @@ func (g *genius) getTrackInfo() (TrackInfo, error) {
 
 	artist := hits[0].Result.Artist.Name
 	title := hits[0].Result.Title
+	songArtURL := hits[0].Result.SongArtURL
+	logrus.Info("songArtURL = ", songArtURL)
 	trackInfo := TrackInfo{
-		Artist: artist,
-		Title:  title,
+		Artist:     artist,
+		Title:      title,
+		SongArtURL: songArtURL,
 	}
 	return trackInfo, nil
 }

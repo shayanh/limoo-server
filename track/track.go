@@ -3,10 +3,11 @@ package track
 import "gopkg.in/mgo.v2/bson"
 
 type track struct {
-	Artist string `json:"artist"`
-	Title  string `json:"title"`
-	Lyrics string `json:"lyrics"`
-	Source string `json:"source"`
+	Artist     string `json:"artist"`
+	Title      string `json:"title"`
+	Lyrics     string `json:"lyrics"`
+	SongArtURL string `json:"song_art_url"`
+	Source     string `json:"source"`
 }
 
 func searchTrack(artist, title string) (*track, bool) {
