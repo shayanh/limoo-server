@@ -59,7 +59,7 @@ type geniusArtist struct {
 
 var httpClient = &http.Client{Timeout: 5 * time.Second}
 
-func (g *genius) getTrackInfo() (string, string, error) {
+func (g *genius) getTrackInfo() (TrackInfo, error) {
 	apiURL := "https://api.genius.com/"
 	method := "search"
 	query := url.QueryEscape(g.qartist + " " + g.qtitle)
@@ -70,7 +70,7 @@ func (g *genius) getTrackInfo() (string, string, error) {
 	resp, err := httpClient.Do(req)
 	if err != nil {
 		logrus.Error(err)
-		return "", "", err
+		return TrackInfo{}, err
 	}
 	defer resp.Body.Close()
 
@@ -80,19 +80,26 @@ func (g *genius) getTrackInfo() (string, string, error) {
 	status := res.Meta.Status
 	hits := res.Message.Hits
 
-	if status != 200 || len(hits) < 1 {
-		return "", "", fmt.Errorf("cannot fetch track information")
+	if status != 200 {
+		return TrackInfo{}, fmt.Errorf("status code = %d", status)
+	}
+	if len(hits) < 1 {
+		return TrackInfo{}, fmt.Errorf("no results found")
 	}
 	g.trackURL = hits[0].Result.TrackURL
 
 	artist := hits[0].Result.Artist.Name
 	title := hits[0].Result.Title
-	return artist, title, nil
+	trackInfo := TrackInfo{
+		Artist: artist,
+		Title:  title,
+	}
+	return trackInfo, nil
 }
 
 func (g *genius) getLyrics() (string, error) {
 	if g.trackURL == "" {
-		_, _, err := g.getTrackInfo()
+		_, err := g.getTrackInfo()
 		if err != nil {
 			return "", err
 		}

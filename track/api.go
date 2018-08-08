@@ -15,51 +15,41 @@ type request struct {
 	Title  string
 }
 
-type response struct {
-	Lyrics string `json:"lyrics"`
-}
-
-func getTrack(qartist, qtitle string) (response, error) {
-	resp := response{}
-
+func getTrack(qartist, qtitle string) (track, error) {
 	log.WithFields(log.Fields{
 		"qartist": qartist,
 		"qtitle":  qtitle,
-	})
+	}).Info()
 
 	lyricsHandler := new(lyrics.Handler)
 	lyricsHandler.Init(qartist, qtitle)
-	artist, title, err := lyricsHandler.GetTrackInfo()
-	log.WithFields(log.Fields{
-		"artist": artist,
-		"title":  title,
-	}).Info()
+	trackInfo, err := lyricsHandler.GetTrackInfo()
 	if err != nil {
-		return resp, err
+		return track{}, err
 	}
-
-	t, found := searchTrack(artist, title)
 	log.WithFields(log.Fields{
-		"found in db": found,
+		"artist": trackInfo.Artist,
+		"title":  trackInfo.Title,
 	}).Info()
+
+	t, found := searchTrack(trackInfo.Artist, trackInfo.Title)
+	log.WithFields(log.Fields{"found in db": found}).Info()
 	if found {
-		resp.Lyrics = t.Lyrics
-		return resp, nil
+		return *t, nil
 	}
 
 	lyrics, err := lyricsHandler.GetLyrics()
 	if err != nil {
-		return resp, err
+		return track{}, err
 	}
 	newTrack := &track{
-		Artist: artist,
-		Title:  title,
+		Artist: trackInfo.Artist,
+		Title:  trackInfo.Title,
 		Lyrics: lyrics,
 	}
 	go insertTrack(newTrack)
 
-	resp.Lyrics = lyrics
-	return resp, nil
+	return *newTrack, nil
 }
 
 // HandleFuncs for /lyrics path

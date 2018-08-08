@@ -3,10 +3,17 @@ package lyrics
 import (
 	"fmt"
 	"strings"
+
+	"github.com/sirupsen/logrus"
 )
 
 type Handler struct {
 	backends []backend
+}
+
+type TrackInfo struct {
+	Artist string
+	Title  string
 }
 
 func (p *Handler) cleanName(s string) string {
@@ -39,15 +46,16 @@ func (p *Handler) Init(qartist, qtitle string) {
 	p.backends = append(p.backends, gns)
 }
 
-func (p *Handler) GetTrackInfo() (string, string, error) {
+func (p *Handler) GetTrackInfo() (TrackInfo, error) {
 	for _, b := range p.backends {
-		artist, title, err := b.getTrackInfo()
+		trackInfo, err := b.getTrackInfo()
 		if err != nil {
+			logrus.Error(err)
 			continue
 		}
-		return artist, title, nil
+		return trackInfo, nil
 	}
-	return "", "", fmt.Errorf("cannot fetch track information")
+	return TrackInfo{}, fmt.Errorf("cannot fetch track information")
 }
 
 func (p *Handler) GetLyrics() (string, error) {
