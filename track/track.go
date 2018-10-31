@@ -1,6 +1,10 @@
 package track
 
-import "gopkg.in/mgo.v2/bson"
+import (
+	"google.golang.org/appengine"
+
+	"google.golang.org/appengine/datastore"
+)
 
 type track struct {
 	Artist     string `json:"artist"`
@@ -11,31 +15,21 @@ type track struct {
 }
 
 func searchTrack(artist, title string) (*track, bool) {
-	t := new(track)
-	found := false
-
-	session, err := newSession()
-	if err != nil {
-		return t, false
+	ctx := appengine.BackgroundContext()
+	q := datastore.NewQuery("tracks").Filter("Artist =", artist).Filter("Title = ", title)
+	t := q.Run(ctx)
+	for {
+		var tck track
+		_, err := t.Next(&tck)
+		if err == datastore.Done || err != nil {
+			return nil, false
+		}
+		return &tck, true
 	}
-	defer session.Close()
-
-	c := session.DB("limoo").C("tracks")
-	err = c.Find(bson.M{"artist": artist, "title": title}).One(t)
-	if err == nil {
-		found = true
-	}
-	return t, found
 }
 
 func insertTrack(t *track) error {
-	session, err := newSession()
-	if err != nil {
-		return err
-	}
-	defer session.Close()
-
-	c := session.DB("limoo").C("tracks")
-	err = c.Insert(t)
+	ctx := appengine.BackgroundContext()
+	_, err := datastore.Put(ctx, datastore.NewIncompleteKey(ctx, "tracks", nil), t)
 	return err
 }

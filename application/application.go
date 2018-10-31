@@ -15,7 +15,7 @@ type Application struct {
 
 func NewApplication() *Application {
 	viper.SetConfigName("config")
-	viper.AddConfigPath(".")
+	viper.AddConfigPath("../../")
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatal(err)
 	}
