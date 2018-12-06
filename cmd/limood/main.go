@@ -3,6 +3,8 @@ package main
 import (
 	"net/http"
 
+	"github.com/shayanh/limoo-server/config"
+
 	log "github.com/sirupsen/logrus"
 
 	"github.com/gorilla/mux"
@@ -14,6 +16,10 @@ func main() {
 	p, err := psh.NewPlatformInfo()
 	if err != nil {
 		log.Fatal("Not in a Platform.sh Environemnt")
+	}
+
+	if err = config.InitEnvVars(); err != nil {
+		log.Fatal(err)
 	}
 
 	router := mux.NewRouter()

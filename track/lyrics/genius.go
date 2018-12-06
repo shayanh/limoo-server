@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"os"
 	"time"
+
+	"github.com/shayanh/limoo-server/config"
 
 	"github.com/sirupsen/logrus"
 
@@ -22,8 +23,7 @@ type genius struct {
 }
 
 func (g *genius) init(qartist, qtitle string) {
-	g.accessToken = os.Getenv("GENIUS_ACCESS_TOKEN")
-	logrus.Info(g.accessToken)
+	g.accessToken = config.EnvVars.GeniusAccessToken
 	g.qartist = qartist
 	g.qtitle = qtitle
 }
