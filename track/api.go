@@ -32,12 +32,6 @@ func getTrack(qartist, qtitle string) (track, error) {
 		"title":  trackInfo.Title,
 	}).Info()
 
-	// t, found := searchTrack(trackInfo.Artist, trackInfo.Title)
-	// log.WithFields(log.Fields{"found in db": found}).Info()
-	// if found {
-	// return *t, nil
-	// }
-
 	lyrics, err := lyricsHandler.GetLyrics()
 	if err != nil {
 		return track{}, err
@@ -48,7 +42,6 @@ func getTrack(qartist, qtitle string) (track, error) {
 		SongArtURL: trackInfo.SongArtURL,
 		Lyrics:     lyrics,
 	}
-	// go insertTrack(newTrack)
 
 	return *newTrack, nil
 }

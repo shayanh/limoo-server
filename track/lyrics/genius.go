@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"os"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -12,7 +13,6 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/spf13/viper"
 )
 
 type genius struct {
@@ -22,7 +22,7 @@ type genius struct {
 }
 
 func (g *genius) init(qartist, qtitle string) {
-	g.accessToken = viper.GetString("genius_access_token")
+	g.accessToken = os.Getenv("GENIUS_ACCESS_TOKEN")
 	g.qartist = qartist
 	g.qtitle = qtitle
 }
