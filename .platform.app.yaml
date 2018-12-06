@@ -5,7 +5,7 @@ type: golang:1.11
 hooks:
     build: |
         # Modify this line if you want to build differently or use an alternate name for your executable.
-        go build ./cmd/limood -o bin/app
+        go build -o bin/app ./cmd/limood
 
 web:
     upstream:
