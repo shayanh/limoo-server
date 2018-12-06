@@ -32,11 +32,11 @@ func getTrack(qartist, qtitle string) (track, error) {
 		"title":  trackInfo.Title,
 	}).Info()
 
-	t, found := searchTrack(trackInfo.Artist, trackInfo.Title)
-	log.WithFields(log.Fields{"found in db": found}).Info()
-	if found {
-		return *t, nil
-	}
+	// t, found := searchTrack(trackInfo.Artist, trackInfo.Title)
+	// log.WithFields(log.Fields{"found in db": found}).Info()
+	// if found {
+	// return *t, nil
+	// }
 
 	lyrics, err := lyricsHandler.GetLyrics()
 	if err != nil {
@@ -48,7 +48,7 @@ func getTrack(qartist, qtitle string) (track, error) {
 		SongArtURL: trackInfo.SongArtURL,
 		Lyrics:     lyrics,
 	}
-	go insertTrack(newTrack)
+	// go insertTrack(newTrack)
 
 	return *newTrack, nil
 }
@@ -58,10 +58,10 @@ func HandleFuncs(router *mux.Router) {
 	router.HandleFunc("", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		req := request{
-			// Artist: r.URL.Query().Get("artist"),
-			// Title:  r.URL.Query().Get("title"),
-			Artist: r.PostForm.Get("artist"),
-			Title:  r.PostForm.Get("title"),
+			Artist: r.URL.Query().Get("artist"),
+			Title:  r.URL.Query().Get("title"),
+			// Artist: r.PostForm.Get("artist"),
+			// Title:  r.PostForm.Get("title"),
 		}
 
 		resp, err := getTrack(req.Artist, req.Title)
