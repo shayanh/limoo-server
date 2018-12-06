@@ -23,6 +23,7 @@ type genius struct {
 
 func (g *genius) init(qartist, qtitle string) {
 	g.accessToken = os.Getenv("GENIUS_ACCESS_TOKEN")
+	logrus.Info(g.accessToken)
 	g.qartist = qartist
 	g.qtitle = qtitle
 }
